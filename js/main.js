@@ -173,5 +173,19 @@ window.renderApp = renderApp;
 window.switchTab = switchTab;
 window.setSort = setSort;
 
+function getUsers() {
+  return JSON.parse(localStorage.getItem('users') || '{}');
+}
+function setUsers(users) {
+  localStorage.setItem('users', JSON.stringify(users));
+}
+function setUserData(username, data) {
+  localStorage.setItem('data_' + username, JSON.stringify(data));
+}
+function getUserData(username) {
+  return JSON.parse(localStorage.getItem('data_' + username) || '{"games":[],"wishlist":[],"log":[]}');
+}
+
+
 if (currentUser) renderApp();
 else renderLogin();
