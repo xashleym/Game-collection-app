@@ -65,6 +65,14 @@ function doRegister() {
   setUserData(username, {games: [], wishlist: [], log: []});
   login(username);
 }
+
+function login(username) {
+  currentUser = username;
+  renderApp();
+}
+window.login = login;
+
+
 function renderApp() {
   if (!currentUser) { renderLogin(); return; }
   let data = getUserData(currentUser);
