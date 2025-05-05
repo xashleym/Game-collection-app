@@ -1,5 +1,6 @@
 // Entry point
-let currentUser = localStorage.getItem('currentUser') || null;
+let currentUser = null;
+localStorage.removeItem('currentUser');
 
 function renderLogin(errorMsg = '') {
   document.getElementById('app').innerHTML = `
