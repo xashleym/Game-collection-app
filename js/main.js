@@ -101,8 +101,8 @@ function renderApp() {
         <option value="">Select Genre</option>
         ${genreOptions}
       </select>
-      <button onclick="addGame()">Add to Collection</button>
-      <button onclick="addWishlist()">Add to Wishlist</button>
+      <button onclick="addGame()" title="Add the game to your personal collection.">Add to Collection</button>
+      <button onclick="addWishlist()" title="Add the game to your wishlist (games you want to play).">Add to Wishlist</button>
     </div>
     <div class="tabs">
       <button class="tab${activeTab==='collection'?' active':''}" onclick="switchTab('collection')">Collection</button>
@@ -131,7 +131,7 @@ function renderApp() {
               <span class="game-genre">${g.genre || 'Unknown'}</span>
             </div>
             <div class="actions">
-              <button onclick="removeGame(${g.i})">Remove</button>
+              <button onclick="removeGame(${g.i})" title="Remove this game from your collection.">Remove</button>
             </div>
           </div>
         `).join('')}
@@ -159,7 +159,7 @@ function renderApp() {
               <span class="game-genre">${g.genre || 'Unknown'}</span>
             </div>
             <div class="actions">
-              <button onclick="removeWishlist(${g.i})">Remove</button>
+              <button onclick="removeWishlist(${g.i})" title="Remove this game from your wishlist.">Remove</button>
             </div>
           </div>
         `).join('')}
@@ -173,6 +173,7 @@ function renderApp() {
     </div>
   `;
 }
+
 window.renderLogin = renderLogin;
 window.renderRegister = renderRegister;
 window.doLogin = doLogin;
