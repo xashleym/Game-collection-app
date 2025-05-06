@@ -2,6 +2,13 @@
 let currentUser = null;
 localStorage.removeItem('currentUser');
 
+// Helper variables for tabs and genres
+let activeTab = 'collection';
+const genreList = [
+  "Action", "Adventure", "RPG", "Strategy", "Simulation", "Puzzle", "Sports", "Racing", "Shooter", "Platformer"
+];
+
+// ---- Authentication and Navigation ----
 function renderLogin(errorMsg = '') {
   document.getElementById('app').innerHTML = `
     <h1 class="center">Game Collection Manager</h1>
@@ -65,14 +72,13 @@ function doRegister() {
   setUserData(username, {games: [], wishlist: [], log: []});
   login(username);
 }
-
 function login(username) {
   currentUser = username;
   renderApp();
 }
 window.login = login;
 
-
+// ---- Main App ----
 function renderApp() {
   if (!currentUser) { renderLogin(); return; }
   let data = getUserData(currentUser);
@@ -174,14 +180,60 @@ function renderApp() {
   `;
 }
 
-window.renderLogin = renderLogin;
-window.renderRegister = renderRegister;
-window.doLogin = doLogin;
-window.doRegister = doRegister;
-window.renderApp = renderApp;
-window.switchTab = switchTab;
-window.setSort = setSort;
+// ---- Tab and Sorting Handlers (minimal stubs, fill in as needed) ----
+function switchTab(tab) { activeTab = tab; renderApp(); }
+function setSort(tab, by, dir) {
+  localStorage.setItem('sort_' + tab, JSON.stringify({by, dir}));
+  renderApp();
+}
+function getSort(tab) {
+  return JSON.parse(localStorage.getItem('sort_' + tab) || '{"by":"title","dir":"asc"}');
+}
+function sortGames(arr, by, dir) {
+  return arr.slice().sort((a, b) => {
+    let cmp = (a[by] || '').localeCompare(b[by] || '');
+    return dir === 'asc' ? cmp : -cmp;
+  });
+}
 
+// ---- Game/Wishlist Actions (minimal stubs, fill in as needed) ----
+function addGame() {
+  let title = document.getElementById('title').value.trim();
+  let genre = document.getElementById('genre').value;
+  if (!title || !genre) return;
+  let data = getUserData(currentUser);
+  data.games.push({title, genre});
+  setUserData(currentUser, data);
+  renderApp();
+}
+function addWishlist() {
+  let title = document.getElementById('title').value.trim();
+  let genre = document.getElementById('genre').value;
+  if (!title || !genre) return;
+  let data = getUserData(currentUser);
+  data.wishlist.push({title, genre});
+  setUserData(currentUser, data);
+  renderApp();
+}
+function removeGame(idx) {
+  let data = getUserData(currentUser);
+  data.games.splice(idx, 1);
+  setUserData(currentUser, data);
+  renderApp();
+}
+function removeWishlist(idx) {
+  let data = getUserData(currentUser);
+  data.wishlist.splice(idx, 1);
+  setUserData(currentUser, data);
+  renderApp();
+}
+function logout() {
+  currentUser = null;
+  localStorage.removeItem('currentUser');
+  renderLogin();
+}
+
+// ---- User Data Helpers ----
 function getUsers() {
   return JSON.parse(localStorage.getItem('users') || '{}');
 }
@@ -195,6 +247,6 @@ function getUserData(username) {
   return JSON.parse(localStorage.getItem('data_' + username) || '{"games":[],"wishlist":[],"log":[]}');
 }
 
-
+// ---- App Start ----
 if (currentUser) renderApp();
 else renderLogin();
